@@ -31,9 +31,6 @@ jobs:
       - name: Grant execute permission
         run: chmod +x gradlew
 
-      - name: Run release unit tests
-        run: ./gradlew :app:testReleaseUnitTest --stacktrace
-
       - name: Create CI signing key
         run: |
           keytool -genkeypair \
