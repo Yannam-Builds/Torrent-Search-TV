@@ -6,6 +6,7 @@ import android.content.res.Configuration
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -15,11 +16,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.drawscope.drawOutline
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -72,17 +70,11 @@ fun Modifier.tvFocusHighlight(
             scaleX = scale
             scaleY = scale
         }
-        .drawWithCache {
-            val outline = shape.createOutline(size, layoutDirection, this)
-            onDrawWithContent {
-                drawContent()
-                if (isFocused) {
-                    drawOutline(
-                        outline = outline,
-                        color = focusColor,
-                        style = Stroke(width = 3.dp.toPx()),
-                    )
-                }
-            }
-        }
+        .then(
+            if (isFocused) {
+                Modifier.border(width = 3.dp, color = focusColor, shape = shape)
+            } else {
+                Modifier
+            },
+        )
 }
