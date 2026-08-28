@@ -23,10 +23,9 @@ fun SettingsListItem(
     trailingContent: @Composable (() -> Unit)? = null,
 ) {
     ListItem(
-        modifier = Modifier
+        modifier = modifier
             .tvFocusHighlight()
-            .clickable(onClick = onClick)
-            .then(modifier),
+            .clickable(onClick = onClick),
         leadingContent = {
             Icon(
                 painter = painterResource(icon),

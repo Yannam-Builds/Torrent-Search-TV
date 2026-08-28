@@ -26,6 +26,7 @@ fun ExpandableItem(
     isExpanded: Boolean,
     onToggle: () -> Unit,
     @DrawableRes icon: Int? = null,
+    modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     val trailingIconRotation by animateFloatAsState(
@@ -35,7 +36,7 @@ fun ExpandableItem(
 
     Column(modifier = Modifier.fillMaxWidth()) {
         ListItem(
-            modifier = Modifier
+            modifier = modifier
                 .tvFocusHighlight()
                 .clickable(onClick = onToggle),
             leadingContent = icon?.let { iconId ->
