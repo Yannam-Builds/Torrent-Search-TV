@@ -1,0 +1,73 @@
+name: Stable Release APK
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: torrent-search-tv-stable-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  stable-release:
+    name: Build stable release APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: gradle
+
+      - name: Grant execute permission
+        run: chmod +x gradlew
+
+      - name: Run release unit tests
+        run: ./gradlew :app:testReleaseUnitTest --stacktrace
+
+      - name: Create CI signing key
+        run: |
+          keytool -genkeypair \
+            -keystore "$RUNNER_TEMP/torrent-search-tv-stable.jks" \
+            -storepass android \
+            -alias androiddebugkey \
+            -keypass android \
+            -dname "CN=Torrent Search TV Stable,O=Yannam Builds,C=US" \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000
+
+      - name: Build signed release APK
+        run: |
+          ./gradlew :app:assembleRelease --stacktrace \
+            -Pandroid.injected.signing.store.file="$RUNNER_TEMP/torrent-search-tv-stable.jks" \
+            -Pandroid.injected.signing.store.password=android \
+            -Pandroid.injected.signing.key.alias=androiddebugkey \
+            -Pandroid.injected.signing.key.password=android
+
+      - name: Verify and stage APK
+        run: |
+          mkdir -p stable-output
+          apk="$(find app/build/outputs/apk/release -maxdepth 1 -type f -name '*.apk' | sort | head -n 1)"
+          test -n "$apk"
+          apksigner="$(find "$ANDROID_HOME/build-tools" -type f -name apksigner | sort -V | tail -n 1)"
+          "$apksigner" verify --verbose --print-certs "$apk"
+          cp "$apk" stable-output/Torrent-Search-TV-stable.apk
+          sha256sum stable-output/Torrent-Search-TV-stable.apk > stable-output/Torrent-Search-TV-stable.apk.sha256
+
+      - name: Upload stable APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Torrent-Search-TV-stable
+          path: stable-output/
+          if-no-files-found: error
+          retention-days: 30
