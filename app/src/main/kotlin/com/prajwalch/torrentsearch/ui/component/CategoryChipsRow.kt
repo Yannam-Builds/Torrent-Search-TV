@@ -20,6 +20,7 @@ import com.prajwalch.torrentsearch.domain.model.Category
 import com.prajwalch.torrentsearch.ui.categoryStringResource
 import com.prajwalch.torrentsearch.ui.iconResId
 import com.prajwalch.torrentsearch.ui.theme.spaces
+import com.prajwalch.torrentsearch.ui.tv.tvFocusHighlight
 
 @Composable
 fun CategoryChipsRow(
@@ -40,6 +41,7 @@ fun CategoryChipsRow(
     ) {
         items(items = categories, contentType = { it }) {
             FilterChip(
+                modifier = Modifier.tvFocusHighlight(shape = MaterialTheme.shapes.small),
                 selected = selectedCategory == it,
                 onClick = { onCategoryClick(it) },
                 leadingIcon = {

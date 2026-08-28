@@ -11,6 +11,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 
 import com.prajwalch.torrentsearch.R
+import com.prajwalch.torrentsearch.ui.tv.tvFocusHighlight
 
 @Composable
 fun RecentSearchList(
@@ -21,7 +22,9 @@ fun RecentSearchList(
     Column(modifier = modifier) {
         queries.forEach {
             RecentSearchListItem(
-                modifier = Modifier.clickable { onQueryClick(it) },
+                modifier = Modifier
+                    .tvFocusHighlight()
+                    .clickable { onQueryClick(it) },
                 query = it,
             )
         }

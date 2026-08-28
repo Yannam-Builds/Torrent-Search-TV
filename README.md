@@ -137,6 +137,16 @@ See the [wiki](https://github.com/prajwalch/TorrentSearch/wiki) for setup instru
 - Clean, easy-to-use interface
 - Adapts to your wallpaper and system theme, with full light/dark mode support
 
+### Android TV and Google TV
+
+- Supports Android TV/Google TV devices running Android 7.1 or newer
+- Appears directly in TV launchers while remaining installable on phones and tablets
+- Fully navigable with a standard D-pad remote, including search, browse, results, bookmarks,
+  settings, dialogs, menus, and torrent details
+- Persistent focus rings and subtle focus scaling make the selected control visible from a distance
+- TV-specific text sizing and overscan-safe margins improve readability on large screens
+- Search text entry uses the television's on-screen keyboard or a connected hardware keyboard
+
 ## Building from Source
 
 The easiest way is to open the project in [Android Studio](https://developer.android.com/studio) — 

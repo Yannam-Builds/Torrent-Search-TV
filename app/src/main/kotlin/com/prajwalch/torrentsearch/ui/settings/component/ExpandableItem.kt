@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 
 import com.prajwalch.torrentsearch.R
+import com.prajwalch.torrentsearch.ui.tv.tvFocusHighlight
 
 @Composable
 fun ExpandableItem(
@@ -34,7 +35,9 @@ fun ExpandableItem(
 
     Column(modifier = Modifier.fillMaxWidth()) {
         ListItem(
-            modifier = Modifier.clickable(onClick = onToggle),
+            modifier = Modifier
+                .tvFocusHighlight()
+                .clickable(onClick = onToggle),
             leadingContent = icon?.let { iconId ->
                 {
                     Icon(

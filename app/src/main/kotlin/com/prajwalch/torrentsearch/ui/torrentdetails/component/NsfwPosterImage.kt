@@ -37,6 +37,7 @@ import coil3.request.transformations
 
 import com.prajwalch.torrentsearch.R
 import com.prajwalch.torrentsearch.ui.theme.spaces
+import com.prajwalch.torrentsearch.ui.tv.tvFocusHighlight
 
 @Composable
 fun NsfwPosterImage(
@@ -56,6 +57,7 @@ fun NsfwPosterImage(
             .aspectRatio(ratio = aspectRatio, matchHeightConstraintsFirst = true)
             .clip(shape)
             .border(border = PosterImageDefaults.BorderStroke, shape = shape)
+            .tvFocusHighlight(shape = shape)
             .clickable {
                 if (showTapToRevealHint) showTapToRevealHint = false
                 revealed = !revealed

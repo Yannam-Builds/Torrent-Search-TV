@@ -24,6 +24,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 
@@ -33,6 +35,7 @@ import com.prajwalch.torrentsearch.ui.component.CategoryChipsRow
 import com.prajwalch.torrentsearch.ui.component.ExpandableSearchBar
 import com.prajwalch.torrentsearch.ui.theme.TorrentSearchTheme
 import com.prajwalch.torrentsearch.ui.theme.spaces
+import com.prajwalch.torrentsearch.ui.tv.LocalIsTelevision
 
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -54,6 +57,8 @@ fun SearchBox(
     val coroutineScope = rememberCoroutineScope()
     val searchBarState = rememberSearchBarState()
     val textFieldState = rememberTextFieldState()
+    val isTelevision = LocalIsTelevision.current
+    val initialTvFocusRequester = remember { FocusRequester() }
     val enableSearchButton by remember {
         derivedStateOf {
             textFieldState.text.isNotBlank()
@@ -70,7 +75,9 @@ fun SearchBox(
     }
     // Prevent search bar from being autofocused on older Android versions
     // which range from 7.1 to 8.1 (<9).
-    val focusableModifier = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+    val focusableModifier = if (
+        Build.VERSION.SDK_INT < Build.VERSION_CODES.P && !isTelevision
+    ) {
         Modifier.focusable()
     } else {
         Modifier
@@ -82,6 +89,10 @@ fun SearchBox(
             .drop(1)
             .distinctUntilChanged()
             .collectLatest { onFilterSuggestions(it.toString()) }
+    }
+
+    LaunchedEffect(isTelevision) {
+        if (isTelevision) initialTvFocusRequester.requestFocus()
     }
 
     Column(
@@ -123,7 +134,10 @@ fun SearchBox(
                 enabled = enableSearchButton,
             )
             Spacer(Modifier.width(MaterialTheme.spaces.small))
-            BrowseButton(onClick = onBrowse)
+            BrowseButton(
+                onClick = onBrowse,
+                modifier = Modifier.focusRequester(initialTvFocusRequester),
+            )
         }
     }
 }

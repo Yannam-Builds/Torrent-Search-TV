@@ -16,6 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
 import com.prajwalch.torrentsearch.R
+import com.prajwalch.torrentsearch.ui.tv.tvFocusHighlight
 
 @Composable
 fun SearchSuggestionList(
@@ -30,6 +31,7 @@ fun SearchSuggestionList(
             SearchSuggestionListItem(
                 modifier = Modifier
                     .animateItem()
+                    .tvFocusHighlight()
                     .clickable { onSearchRequest(it) },
                 query = it,
                 onInsertClick = { onInsertQuery(it) },

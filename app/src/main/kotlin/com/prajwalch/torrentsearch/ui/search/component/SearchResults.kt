@@ -21,6 +21,7 @@ import com.prajwalch.torrentsearch.ui.categoryStringResource
 import com.prajwalch.torrentsearch.ui.component.LazyColumnWithScrollbar
 import com.prajwalch.torrentsearch.ui.component.TorrentListItem
 import com.prajwalch.torrentsearch.ui.theme.spaces
+import com.prajwalch.torrentsearch.ui.tv.tvFocusHighlight
 
 import kotlinx.collections.immutable.ImmutableList
 
@@ -61,6 +62,7 @@ fun SearchResults(
                 TorrentListItem(
                     modifier = Modifier
                         .animateItem()
+                        .tvFocusHighlight(shape = MaterialTheme.shapes.large)
                         .clickable { onResultClick(it) }
                         .graphicsLayer { alpha = listItemAlpha },
                     name = it.name,

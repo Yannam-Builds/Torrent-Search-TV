@@ -13,6 +13,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 
 import com.prajwalch.torrentsearch.R
+import com.prajwalch.torrentsearch.ui.tv.tvFocusHighlight
 
 @Composable
 fun SearchButton(
@@ -21,7 +22,7 @@ fun SearchButton(
     enabled: Boolean = true,
 ) {
     Button(
-        modifier = modifier,
+        modifier = modifier.tvFocusHighlight(enabled = enabled),
         onClick = onClick,
         enabled = enabled,
         contentPadding = ButtonDefaults.ButtonWithIconContentPadding,

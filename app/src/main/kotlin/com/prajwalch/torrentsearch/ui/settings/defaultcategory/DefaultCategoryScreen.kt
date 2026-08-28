@@ -27,6 +27,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.prajwalch.torrentsearch.R
 import com.prajwalch.torrentsearch.domain.model.Category
 import com.prajwalch.torrentsearch.ui.categoryStringResource
+import com.prajwalch.torrentsearch.ui.tv.tvFocusHighlight
 
 import org.koin.androidx.compose.koinViewModel
 
@@ -100,6 +101,7 @@ private fun CategoryListItem(
 ) {
     ListItem(
         modifier = Modifier
+            .tvFocusHighlight()
             .clickable(
                 role = Role.RadioButton,
                 onClick = onClick,

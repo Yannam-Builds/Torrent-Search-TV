@@ -59,6 +59,7 @@ import com.prajwalch.torrentsearch.ui.settings.component.SettingsSectionTitle
 import com.prajwalch.torrentsearch.ui.sortCriteriaStringResource
 import com.prajwalch.torrentsearch.ui.sortOrderStringResource
 import com.prajwalch.torrentsearch.ui.theme.spaces
+import com.prajwalch.torrentsearch.ui.tv.tvFocusHighlight
 
 import org.koin.androidx.compose.koinViewModel
 
@@ -201,7 +202,9 @@ private fun AppearanceSettings(
         ) {
             DarkTheme.entries.forEach { theme ->
                 ListItem(
-                    modifier = Modifier.clickable { onSetDarkTheme(theme) },
+                    modifier = Modifier
+                        .tvFocusHighlight()
+                        .clickable { onSetDarkTheme(theme) },
                     leadingContent = {
                         RadioButton(
                             selected = uiState.darkTheme == theme,

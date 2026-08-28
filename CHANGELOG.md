@@ -2,6 +2,8 @@
 
 ### What's new
 
+- Added Android TV and Google TV launcher support, D-pad navigation focus styling, ten-foot
+  typography, and overscan-safe layout margins.
 - Added support for using torrent providers that are protected by Cloudflare.
 - Added a new [DNS over HTTPS](https://en.wikipedia.org/wiki/DNS_over_HTTPS) setting.
 - Added an option to auto-detect supported categories when adding new Torznab provider.
