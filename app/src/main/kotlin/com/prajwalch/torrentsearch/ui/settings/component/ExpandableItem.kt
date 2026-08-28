@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 
 import com.prajwalch.torrentsearch.R
+import com.prajwalch.torrentsearch.ui.tv.tvFocusHighlight
 
 @Composable
 fun ExpandableItem(
@@ -25,6 +26,7 @@ fun ExpandableItem(
     isExpanded: Boolean,
     onToggle: () -> Unit,
     @DrawableRes icon: Int? = null,
+    modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     val trailingIconRotation by animateFloatAsState(
@@ -34,7 +36,9 @@ fun ExpandableItem(
 
     Column(modifier = Modifier.fillMaxWidth()) {
         ListItem(
-            modifier = Modifier.clickable(onClick = onToggle),
+            modifier = modifier
+                .tvFocusHighlight()
+                .clickable(onClick = onToggle),
             leadingContent = icon?.let { iconId ->
                 {
                     Icon(

@@ -24,6 +24,7 @@ import com.prajwalch.torrentsearch.data.repository.SearchHistoriesByDate
 import com.prajwalch.torrentsearch.data.repository.SearchHistoryDate
 import com.prajwalch.torrentsearch.domain.model.SearchHistoryId
 import com.prajwalch.torrentsearch.ui.theme.spaces
+import com.prajwalch.torrentsearch.ui.tv.tvFocusHighlight
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -60,6 +61,7 @@ fun SearchHistoryList(
             items(items = histories, key = { it.id }) {
                 SearchHistoryListItem(
                     modifier = Modifier
+                        .tvFocusHighlight()
                         .combinedClickable(
                             interactionSource = null,
                             indication = LocalIndication.current,

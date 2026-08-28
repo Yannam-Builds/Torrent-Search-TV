@@ -31,6 +31,7 @@ import com.prajwalch.torrentsearch.domain.model.SortOrder
 import com.prajwalch.torrentsearch.ui.settings.component.SettingsSectionTitle
 import com.prajwalch.torrentsearch.ui.sortCriteriaStringResource
 import com.prajwalch.torrentsearch.ui.sortOrderStringResource
+import com.prajwalch.torrentsearch.ui.tv.tvFocusHighlight
 
 import org.koin.androidx.compose.koinViewModel
 
@@ -108,6 +109,7 @@ private fun SortCriteriaSection(
         for (criteria in SortCriteria.entries) {
             ListItem(
                 modifier = Modifier
+                    .tvFocusHighlight()
                     .clickable(
                         role = Role.RadioButton,
                         onClick = { onCriteriaSelect(criteria) },
@@ -136,6 +138,7 @@ private fun SortOrderSection(
         for (order in SortOrder.entries) {
             ListItem(
                 modifier = Modifier
+                    .tvFocusHighlight()
                     .clickable(
                         role = Role.RadioButton,
                         onClick = { onOrderSelect(order) },

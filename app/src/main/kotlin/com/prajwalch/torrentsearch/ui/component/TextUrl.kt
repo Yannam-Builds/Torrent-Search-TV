@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 
 import com.prajwalch.torrentsearch.R
 import com.prajwalch.torrentsearch.ui.theme.spaces
+import com.prajwalch.torrentsearch.ui.tv.tvFocusHighlight
 
 @Composable
 fun TextUrl(
@@ -29,7 +30,9 @@ fun TextUrl(
     style: TextStyle = LocalTextStyle.current,
 ) {
     Row(
-        modifier = modifier.clickable(onClick = onClick),
+        modifier = modifier
+            .tvFocusHighlight()
+            .clickable(onClick = onClick),
         horizontalArrangement = Arrangement.spacedBy(
             space = MaterialTheme.spaces.extraSmall,
             alignment = Alignment.CenterHorizontally,

@@ -9,10 +9,13 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+
+import com.prajwalch.torrentsearch.ui.tv.LocalIsTelevision
 
 private val DarkColorScheme = darkColorScheme(
     primary = primaryDark,
@@ -106,6 +109,7 @@ fun TorrentSearchTheme(
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     pureBlack: Boolean = false,
+    isTelevision: Boolean = false,
     content: @Composable () -> Unit,
 ) {
     val baseColorScheme = when {
@@ -124,11 +128,13 @@ fun TorrentSearchTheme(
         baseColorScheme
     }
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
-        content = content
-    )
+    CompositionLocalProvider(LocalIsTelevision provides isTelevision) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = if (isTelevision) TvTypography else Typography,
+            content = content,
+        )
+    }
 }
 
 private fun ColorScheme.pureBlack() = copy(surface = Color.Black, background = Color.Black)

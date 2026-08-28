@@ -30,6 +30,7 @@ import com.prajwalch.torrentsearch.domain.model.Torrent
 import com.prajwalch.torrentsearch.ui.component.LazyColumnWithScrollbar
 import com.prajwalch.torrentsearch.ui.component.TorrentListItem
 import com.prajwalch.torrentsearch.ui.theme.spaces
+import com.prajwalch.torrentsearch.ui.tv.tvFocusHighlight
 
 import kotlinx.coroutines.launch
 
@@ -117,7 +118,9 @@ private fun BookmarkListItem(
         },
     ) {
         TorrentListItem(
-            modifier = Modifier.clickable(onClick = onClick),
+            modifier = Modifier
+                .tvFocusHighlight(shape = MaterialTheme.shapes.large)
+                .clickable(onClick = onClick),
             name = bookmark.name,
             size = bookmark.size,
             seeders = bookmark.seeders,

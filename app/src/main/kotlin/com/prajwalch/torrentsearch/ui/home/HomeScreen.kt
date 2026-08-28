@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,6 +31,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 import com.prajwalch.torrentsearch.R
 import com.prajwalch.torrentsearch.domain.model.Category
+import com.prajwalch.torrentsearch.ui.adaptive.LocalAdaptiveLayout
 import com.prajwalch.torrentsearch.ui.home.component.AppBranding
 import com.prajwalch.torrentsearch.ui.home.component.EnableSearchProvidersDialog
 import com.prajwalch.torrentsearch.ui.home.component.RecentSearchList
@@ -50,6 +52,7 @@ fun HomeScreen(
     viewModel: HomeViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val adaptiveLayout = LocalAdaptiveLayout.current
 
     if (uiState.settings.searchProvidersInitialized == false) {
         EnableSearchProvidersDialog(
@@ -75,17 +78,9 @@ fun HomeScreen(
             )
         },
     ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(48.dp),
-        ) {
-            Spacer(Modifier.height(MaterialTheme.spaces.extraLarge))
-
+        val primaryContent: @Composable (Modifier) -> Unit = { contentModifier ->
             Column(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = contentModifier,
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.spaces.extraLarge),
             ) {
@@ -100,29 +95,62 @@ fun HomeScreen(
                     onFilterSuggestions = viewModel::filterSearchSuggestions,
                 )
             }
+        }
+        val recentContent: @Composable (Modifier) -> Unit = { contentModifier ->
+            Column(
+                modifier = contentModifier,
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spaces.small),
+            ) {
+                Text(
+                    modifier = Modifier.padding(horizontal = MaterialTheme.spaces.large),
+                    text = stringResource(R.string.home_title_recent_searches),
+                )
 
-            AnimatedVisibility(uiState.recentSearches.isNotEmpty()) {
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(MaterialTheme.spaces.small),
-                ) {
-                    Text(
-                        modifier = Modifier.padding(horizontal = MaterialTheme.spaces.large),
-                        text = stringResource(R.string.home_title_recent_searches),
-                    )
+                RecentSearchList(
+                    queries = uiState.recentSearches,
+                    onQueryClick = { onSearch(it, uiState.selectedCategory) },
+                )
+            }
+        }
 
-                    RecentSearchList(
-                        queries = uiState.recentSearches,
-                        onQueryClick = { onSearch(it, uiState.selectedCategory) },
-                    )
+        if (adaptiveLayout.usesTwoPanes) {
+            Row(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(vertical = MaterialTheme.spaces.extraLarge),
+                horizontalArrangement = Arrangement.spacedBy(48.dp),
+                verticalAlignment = Alignment.Top,
+            ) {
+                primaryContent(Modifier.weight(1.15f))
+                Column(modifier = Modifier.weight(0.85f)) {
+                    AnimatedVisibility(uiState.recentSearches.isNotEmpty()) {
+                        recentContent(Modifier.fillMaxWidth())
+                    }
                 }
             }
+        } else {
+            Column(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(48.dp),
+            ) {
+                Spacer(Modifier.height(MaterialTheme.spaces.extraLarge))
+                primaryContent(Modifier.fillMaxWidth())
+                AnimatedVisibility(uiState.recentSearches.isNotEmpty()) {
+                    recentContent(Modifier.fillMaxWidth())
+                }
 
-            val configuration = LocalConfiguration.current
-            val isInLandscapeMode = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+                val configuration = LocalConfiguration.current
+                val isInLandscapeMode =
+                    configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
-            if (isInLandscapeMode) {
-                Spacer(Modifier.height(MaterialTheme.spaces.large))
+                if (isInLandscapeMode) {
+                    Spacer(Modifier.height(MaterialTheme.spaces.large))
+                }
             }
         }
     }

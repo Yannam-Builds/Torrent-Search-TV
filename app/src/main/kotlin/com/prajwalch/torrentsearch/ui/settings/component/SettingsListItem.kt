@@ -11,6 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 
+import com.prajwalch.torrentsearch.ui.tv.tvFocusHighlight
+
 @Composable
 fun SettingsListItem(
     onClick: () -> Unit,
@@ -21,9 +23,9 @@ fun SettingsListItem(
     trailingContent: @Composable (() -> Unit)? = null,
 ) {
     ListItem(
-        modifier = Modifier
-            .clickable(onClick = onClick)
-            .then(modifier),
+        modifier = modifier
+            .tvFocusHighlight()
+            .clickable(onClick = onClick),
         leadingContent = {
             Icon(
                 painter = painterResource(icon),

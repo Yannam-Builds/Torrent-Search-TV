@@ -30,11 +30,16 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusProperties
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
@@ -59,6 +64,8 @@ import com.prajwalch.torrentsearch.ui.settings.component.SettingsSectionTitle
 import com.prajwalch.torrentsearch.ui.sortCriteriaStringResource
 import com.prajwalch.torrentsearch.ui.sortOrderStringResource
 import com.prajwalch.torrentsearch.ui.theme.spaces
+import com.prajwalch.torrentsearch.ui.tv.LocalIsTelevision
+import com.prajwalch.torrentsearch.ui.tv.tvFocusHighlight
 
 import org.koin.androidx.compose.koinViewModel
 
@@ -76,6 +83,12 @@ fun SettingsScreen(
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val contentResolver = LocalContext.current.contentResolver
+    val isTelevision = LocalIsTelevision.current
+    val firstSettingFocusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(isTelevision) {
+        if (isTelevision) firstSettingFocusRequester.requestFocus()
+    }
 
     val logsExportLocationChooser = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.CreateDocument(TorrentSearchConstants.LOGS_FILE_TYPE),
@@ -93,6 +106,7 @@ fun SettingsScreen(
         topBar = {
             SettingsScreenTopBar(
                 onNavigateBack = onNavigateBack,
+                firstSettingFocusRequester = firstSettingFocusRequester,
                 scrollBehavior = scrollBehavior,
             )
         },
@@ -107,6 +121,7 @@ fun SettingsScreen(
                 onEnableDynamicTheme = viewModel::enableDynamicTheme,
                 onSetDarkTheme = viewModel::setDarkTheme,
                 onEnablePureBlackTheme = viewModel::enablePureBlackTheme,
+                firstSettingModifier = Modifier.focusRequester(firstSettingFocusRequester),
             )
             GeneralSettings(
                 uiState = uiState.generalSettings,
@@ -145,6 +160,7 @@ fun SettingsScreen(
 @Composable
 private fun SettingsScreenTopBar(
     onNavigateBack: () -> Unit,
+    firstSettingFocusRequester: FocusRequester,
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior? = null,
 ) {
@@ -152,7 +168,12 @@ private fun SettingsScreenTopBar(
         modifier = modifier,
         title = { Text(stringResource(R.string.settings_screen_title)) },
         navigationIcon = {
-            IconButton(onClick = onNavigateBack) {
+            IconButton(
+                modifier = Modifier.focusProperties {
+                    down = firstSettingFocusRequester
+                },
+                onClick = onNavigateBack,
+            ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_arrow_back),
                     contentDescription = null,
@@ -169,6 +190,7 @@ private fun AppearanceSettings(
     onEnableDynamicTheme: (Boolean) -> Unit,
     onSetDarkTheme: (DarkTheme) -> Unit,
     onEnablePureBlackTheme: (Boolean) -> Unit,
+    firstSettingModifier: Modifier,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
@@ -177,6 +199,7 @@ private fun AppearanceSettings(
         // Dynamic theme is available only on Android 12+.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             SettingsListItem(
+                modifier = firstSettingModifier,
                 onClick = { onEnableDynamicTheme(!uiState.enableDynamicTheme) },
                 icon = R.drawable.ic_palette,
                 headline = R.string.settings_enable_dynamic_theme,
@@ -193,6 +216,11 @@ private fun AppearanceSettings(
         var showDarkThemeOptions by rememberSaveable(uiState.darkTheme) { mutableStateOf(false) }
 
         ExpandableItem(
+            modifier = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+                firstSettingModifier
+            } else {
+                Modifier
+            },
             title = stringResource(R.string.settings_dark_theme),
             subtitle = darkThemeStringResource(uiState.darkTheme),
             isExpanded = showDarkThemeOptions,
@@ -201,7 +229,9 @@ private fun AppearanceSettings(
         ) {
             DarkTheme.entries.forEach { theme ->
                 ListItem(
-                    modifier = Modifier.clickable { onSetDarkTheme(theme) },
+                    modifier = Modifier
+                        .tvFocusHighlight()
+                        .clickable { onSetDarkTheme(theme) },
                     leadingContent = {
                         RadioButton(
                             selected = uiState.darkTheme == theme,

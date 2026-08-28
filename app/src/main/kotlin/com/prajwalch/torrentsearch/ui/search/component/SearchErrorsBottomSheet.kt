@@ -47,6 +47,7 @@ import com.prajwalch.torrentsearch.ui.component.BottomInfo
 import com.prajwalch.torrentsearch.ui.component.StackTraceCard
 import com.prajwalch.torrentsearch.ui.theme.TorrentSearchTheme
 import com.prajwalch.torrentsearch.ui.theme.spaces
+import com.prajwalch.torrentsearch.ui.tv.tvFocusHighlight
 
 import kotlinx.collections.immutable.ImmutableList
 
@@ -114,7 +115,9 @@ private fun SearchProviderErrorCard(error: SearchProviderError, modifier: Modifi
 
     Card(modifier = modifier, shape = MaterialTheme.shapes.large) {
         ListItem(
-            modifier = Modifier.clickable { showStackTrace = !showStackTrace },
+            modifier = Modifier
+                .tvFocusHighlight(shape = MaterialTheme.shapes.large)
+                .clickable { showStackTrace = !showStackTrace },
             leadingContent = {
                 Icon(
                     painter = painterResource(R.drawable.ic_error),

@@ -13,8 +13,10 @@ import androidx.activity.addCallback
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -23,7 +25,9 @@ import com.prajwalch.torrentsearch.R
 import com.prajwalch.torrentsearch.domain.model.DarkTheme
 import com.prajwalch.torrentsearch.domain.model.MagnetUri
 import com.prajwalch.torrentsearch.ui.TorrentSearchApp
+import com.prajwalch.torrentsearch.ui.adaptive.AdaptiveContentFrame
 import com.prajwalch.torrentsearch.ui.theme.TorrentSearchTheme
+import com.prajwalch.torrentsearch.ui.tv.isTelevisionDevice
 
 import org.koin.androidx.compose.koinViewModel
 
@@ -37,6 +41,7 @@ class MainActivity : ComponentActivity() {
         onBackPressedDispatcher.addCallback(this) { moveTaskToBack(true) }
 
         val initialSearchQuery = getInitialSearchQuery()
+        val isTelevision = isTelevisionDevice()
 
         enableEdgeToEdge()
         setContent {
@@ -53,15 +58,18 @@ class MainActivity : ComponentActivity() {
                 darkTheme = darkTheme,
                 dynamicColor = uiState.enableDynamicTheme,
                 pureBlack = uiState.pureBlack,
+                isTelevision = isTelevision,
             ) {
-                Surface {
-                    TorrentSearchApp(
-                        onOpenMagnetLink = ::openMagnetLink,
-                        onShareMagnetLink = ::shareMagnetLink,
-                        onShareDescriptionPageUrl = ::shareDescriptionPageUrl,
-                        initialSearchQuery = initialSearchQuery,
-                        openTorrentDetailsInApp = uiState.openTorrentDetailsInApp,
-                    )
+                Surface(modifier = Modifier.fillMaxSize()) {
+                    AdaptiveContentFrame(isTelevision = isTelevision) {
+                        TorrentSearchApp(
+                            onOpenMagnetLink = ::openMagnetLink,
+                            onShareMagnetLink = ::shareMagnetLink,
+                            onShareDescriptionPageUrl = ::shareDescriptionPageUrl,
+                            initialSearchQuery = initialSearchQuery,
+                            openTorrentDetailsInApp = uiState.openTorrentDetailsInApp,
+                        )
+                    }
                 }
             }
         }

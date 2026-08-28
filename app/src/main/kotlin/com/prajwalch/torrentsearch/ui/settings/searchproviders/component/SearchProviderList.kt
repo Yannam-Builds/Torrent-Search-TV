@@ -25,6 +25,7 @@ import com.prajwalch.torrentsearch.domain.model.SearchProviderInfo
 import com.prajwalch.torrentsearch.providers.SearchProviderId
 import com.prajwalch.torrentsearch.providers.SearchProviderType
 import com.prajwalch.torrentsearch.ui.theme.spaces
+import com.prajwalch.torrentsearch.ui.tv.tvFocusHighlight
 
 @Composable
 fun SearchProviderList(
@@ -70,12 +71,14 @@ fun SearchProviderList(
                 SearchProviderType.Builtin -> null
                 SearchProviderType.Torznab -> ({ showTorznabContextMenu = true })
             }
-            val clickableModifier = Modifier.combinedClickable(
-                interactionSource = null,
-                indication = LocalIndication.current,
-                onClick = onClick,
-                onLongClick = longClickHandler,
-            )
+            val clickableModifier = Modifier
+                .tvFocusHighlight(shape = MaterialTheme.shapes.large)
+                .combinedClickable(
+                    interactionSource = null,
+                    indication = LocalIndication.current,
+                    onClick = onClick,
+                    onLongClick = longClickHandler,
+                )
 
             Box(
                 modifier = Modifier

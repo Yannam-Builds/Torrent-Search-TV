@@ -77,6 +77,9 @@
 
     <string name="home_search_query_hint">Search…</string>
     <string name="home_button_search">Search</string>
+    <string name="home_button_voice_input">Voice</string>
+    <string name="home_voice_input_prompt">Speak your search</string>
+    <string name="home_voice_input_unavailable">Voice input is unavailable on this device</string>
     <string name="home_button_browse">Browse</string>
     <string name="home_title_enable_search_providers">Enable search providers</string>
     <string name="home_search_providers_not_enabled_msg">No search providers are enabled yet. Want to enable the recommended ones?</string>

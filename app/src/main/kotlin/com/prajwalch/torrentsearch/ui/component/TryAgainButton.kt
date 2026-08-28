@@ -13,11 +13,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 
 import com.prajwalch.torrentsearch.R
+import com.prajwalch.torrentsearch.ui.tv.tvFocusHighlight
 
 @Composable
 fun TryAgainButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
     Button(
-        modifier = modifier,
+        modifier = modifier.tvFocusHighlight(),
         onClick = onClick,
         contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
     ) {

@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import com.prajwalch.torrentsearch.R
 import com.prajwalch.torrentsearch.ui.theme.TorrentSearchTheme
 import com.prajwalch.torrentsearch.ui.theme.spaces
+import com.prajwalch.torrentsearch.ui.tv.tvFocusHighlight
 
 import kotlinx.coroutines.launch
 
@@ -278,7 +279,9 @@ private fun ActionListItem(
     }
 
     ListItem(
-        modifier = modifier.clickable(onClick = onClick, enabled = enabled),
+        modifier = modifier
+            .tvFocusHighlight(enabled = enabled)
+            .clickable(onClick = onClick, enabled = enabled),
         leadingContent = {
             Icon(
                 modifier = Modifier.size(22.dp),
