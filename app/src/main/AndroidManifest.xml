@@ -13,6 +13,13 @@
         android:name="android.hardware.touchscreen"
         android:required="false" />
 
+    <!-- Allow discovery of the system voice-recognition activity on Android 11+. -->
+    <queries>
+        <intent>
+            <action android:name="android.speech.action.RECOGNIZE_SPEECH" />
+        </intent>
+    </queries>
+
     <application
         android:name=".TorrentSearchApplication"
         android:allowBackup="true"

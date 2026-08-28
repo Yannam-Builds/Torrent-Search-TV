@@ -13,7 +13,6 @@ import androidx.activity.addCallback
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.getValue
@@ -26,9 +25,9 @@ import com.prajwalch.torrentsearch.R
 import com.prajwalch.torrentsearch.domain.model.DarkTheme
 import com.prajwalch.torrentsearch.domain.model.MagnetUri
 import com.prajwalch.torrentsearch.ui.TorrentSearchApp
+import com.prajwalch.torrentsearch.ui.adaptive.AdaptiveContentFrame
 import com.prajwalch.torrentsearch.ui.theme.TorrentSearchTheme
 import com.prajwalch.torrentsearch.ui.tv.isTelevisionDevice
-import com.prajwalch.torrentsearch.ui.tv.tvSafeArea
 
 import org.koin.androidx.compose.koinViewModel
 
@@ -62,7 +61,7 @@ class MainActivity : ComponentActivity() {
                 isTelevision = isTelevision,
             ) {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    Box(modifier = Modifier.tvSafeArea()) {
+                    AdaptiveContentFrame(isTelevision = isTelevision) {
                         TorrentSearchApp(
                             onOpenMagnetLink = ::openMagnetLink,
                             onShareMagnetLink = ::shareMagnetLink,

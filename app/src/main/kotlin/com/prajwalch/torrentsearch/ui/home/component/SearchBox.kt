@@ -1,7 +1,14 @@
 package com.prajwalch.torrentsearch.ui.home.component
 
+import android.app.Activity
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.os.Build
+import android.speech.RecognizerIntent
+import android.widget.Toast
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 
@@ -54,11 +62,35 @@ fun SearchBox(
     onFilterSuggestions: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val searchBarState = rememberSearchBarState()
     val textFieldState = rememberTextFieldState()
     val isTelevision = LocalIsTelevision.current
     val initialTvFocusRequester = remember { FocusRequester() }
+    val voiceInputPrompt = stringResource(R.string.home_voice_input_prompt)
+    val voiceInputUnavailableMessage = stringResource(R.string.home_voice_input_unavailable)
+    val voiceInputIntent = remember(voiceInputPrompt) {
+        Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+            putExtra(
+                RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM,
+            )
+            putExtra(RecognizerIntent.EXTRA_PROMPT, voiceInputPrompt)
+            putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1)
+        }
+    }
+    val voiceInputLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult(),
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            result.data
+                ?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+                ?.firstOrNull()
+                ?.takeIf(String::isNotBlank)
+                ?.let(textFieldState::setTextAndPlaceCursorAtEnd)
+        }
+    }
     val enableSearchButton by remember {
         derivedStateOf {
             textFieldState.text.isNotBlank()
@@ -132,6 +164,28 @@ fun SearchBox(
             SearchButton(
                 onClick = { onSearch(textFieldState.text.toString()) },
                 enabled = enableSearchButton,
+            )
+            Spacer(Modifier.width(MaterialTheme.spaces.small))
+            VoiceInputButton(
+                onClick = {
+                    try {
+                        if (voiceInputIntent.resolveActivity(context.packageManager) == null) {
+                            Toast.makeText(
+                                context,
+                                voiceInputUnavailableMessage,
+                                Toast.LENGTH_LONG,
+                            ).show()
+                        } else {
+                            voiceInputLauncher.launch(voiceInputIntent)
+                        }
+                    } catch (_: ActivityNotFoundException) {
+                        Toast.makeText(
+                            context,
+                            voiceInputUnavailableMessage,
+                            Toast.LENGTH_LONG,
+                        ).show()
+                    }
+                },
             )
             Spacer(Modifier.width(MaterialTheme.spaces.small))
             BrowseButton(

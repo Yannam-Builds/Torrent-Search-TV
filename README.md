@@ -136,6 +136,8 @@ See the [wiki](https://github.com/prajwalch/TorrentSearch/wiki) for setup instru
 
 - Clean, easy-to-use interface
 - Adapts to your wallpaper and system theme, with full light/dark mode support
+- Responsive compact, medium, expanded, and television layouts automatically adapt to phones,
+  foldables, tablets, desktop-style Android windows, rotation, and split-screen
 
 ### Android TV and Google TV
 
@@ -145,7 +147,8 @@ See the [wiki](https://github.com/prajwalch/TorrentSearch/wiki) for setup instru
   settings, dialogs, menus, and torrent details
 - Persistent focus rings and subtle focus scaling make the selected control visible from a distance
 - TV-specific text sizing and overscan-safe margins improve readability on large screens
-- Search text entry uses the television's on-screen keyboard or a connected hardware keyboard
+- Search text entry supports the television's on-screen keyboard, a connected hardware keyboard,
+  or system voice typing from supported remote microphones
 
 ## Building from Source
 
